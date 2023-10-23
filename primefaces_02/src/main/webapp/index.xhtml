@@ -22,7 +22,7 @@
 					<p:inputText id="idokres" value="#{calcBB.okres}" />
 					<p:outputLabel for="idprocent" value="procent:" />
 					<p:inputText id="idprocent" value="#{calcBB.procent}" />
-					<p:commandButton value="Dodaj" action="#{calcBB.calc()}" update="msg" />
+					<p:commandButton value="Oblicz" action="#{calcBB.calc()}" update="msg" />
 				</h:panelGrid>
 				<p:commandLink value="Informacje" action="#{calcBB.info()}" />
 			</h:form>

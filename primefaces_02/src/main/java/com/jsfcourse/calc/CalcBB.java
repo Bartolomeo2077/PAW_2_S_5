@@ -57,14 +57,28 @@ public class CalcBB {
 			result = (kwota * (procent/100)) / (okres/12);
 			
 			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operacja wykonana poprawnie", null));
-			return "showresult"; 
+			return true;
 		} catch (Exception e) {
 			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Błąd podczas przetwarzania parametrów", null));
-			return null; 
+			return false;
 		}
 				
 	}
+	// Go to "showresult" if ok
+    public String calc() {
+        if (doTheMath()) {
+            return "showresult";
+        }
+        return null;
+    }
 
+    // Put result in messages on AJAX call
+    public String calc_AJAX() {
+        if (doTheMath()) {
+            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Wynik: " + result, null));
+        }
+        return null;
+    }
 	public String info() {
 		return "info"; 
 	}
