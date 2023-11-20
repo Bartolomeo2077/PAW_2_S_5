@@ -1,6 +1,10 @@
 package com.jsfcourse.calc;
 
+import java.io.Serializable;
+import java.util.ResourceBundle;
+
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.annotation.ManagedProperty;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -8,11 +12,20 @@ import jakarta.inject.Named;
 
 @Named
 @RequestScoped
-public class CalcBB {
+public class CalcBB implements Serializable	{
 	private String kwota;
 	private String okres;
 	private String procent;
 	private Double result;
+
+	@Inject
+	@ManagedProperty("#{txtCalcErr}")
+	private ResourceBundle txtCalcErr;
+
+	// Resource injected
+	@Inject
+	@ManagedProperty("#{txtCalc}")
+	private ResourceBundle txtCalc;
 
 	@Inject
 	FacesContext ctx;
@@ -56,14 +69,22 @@ public class CalcBB {
 
 			result = (kwota * (procent/100)) / (okres/12);
 			
-			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operacja wykonana poprawnie", null));
+			ctx.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, txtCalcErr.getString("calcComputationOkInfo"), null));
+			ctx.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, txtCalc.getString("result") + ": " + result, null));
+
 			return true;
-		} catch (Exception e) {
-			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Błąd podczas przetwarzania parametrów", null));
-			return false;
-		}
 				
-	}
+		}
+	catch (Exception e) {
+        ctx.addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Błąd podczas przetwarzania parametrów", null));
+//        return false;
+        return false;
+    	}	
+	}	
+	
 	// Go to "showresult" if ok
     public String calc() {
         if (doTheMath()) {
